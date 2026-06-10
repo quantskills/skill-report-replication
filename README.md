@@ -19,11 +19,6 @@
 /home/coder/project/replication/report-replication
 ```
 
-## 重要变化
-
-- 已脱离旧回测框架：不得调用旧框架的数据层、示例、策略 API 或安装源。
-- 已删除发布文章环节：不再生成对外发布 Markdown。
-- 回测阶段默认使用本 skill 自带的 `scripts/local_backtest.py`，外部 BACKTEST 入口只作为用户明确提供时的可选替代。
 
 ## 调用边界
 
