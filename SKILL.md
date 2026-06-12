@@ -1,6 +1,12 @@
 ---
 name: report-replication
-description: "Reproduce quantitative research reports and papers end to end: full Chinese translation, AI summary, factor formula reconstruction, factor effectiveness validation, standalone beginner-readable HTML factor report, BACKTEST strategy generation and local backtest execution, Chinese backtest explanation report, and final delivery summary. Use when the user provides a quant report/PDF/link/text and asks for report replication, factor replication, factor validation, BACKTEST strategy code, or a beginner-readable research replication package."
+description: 'Reproduce quantitative research reports and papers end to end: full
+  Chinese translation, AI summary, factor formula reconstruction, factor effectiveness
+  validation, standalone beginner-readable HTML factor report, BACKTEST strategy generation
+  and local backtest execution, Chinese backtest explanation report, and final delivery
+  summary. Use when the user provides a quant report/PDF/link/text and asks for report
+  replication, factor replication, factor validation, BACKTEST strategy code, or a
+  beginner-readable research replication package.'
 license: GPL-3.0-only
 metadata:
   organization: QuantSkills
@@ -9,6 +15,28 @@ metadata:
   repository_url: https://github.com/quantskills/skill-report-replication
   project_type: skill
   collection: report-replication
+quantSkills:
+  project_type: skill
+  category: replication
+  tags:
+  - report-replication
+  - factor-research
+  - backtest
+  - html-report
+  - chinese
+  platforms:
+  - claude-code
+  - codex
+  - openclaw
+  - cursor
+  status: stable
+  validation_level: runnable
+  maintainer_type: official
+  summary_zh: 把一篇量化研报、论文、PDF、网页或文本材料，转化为完整的研究复现交付包：全文翻译 → 因子公式复现 → 有效性验证 → 策略代码 →
+    真实本地回测 → 交付摘要。
+  summary_en: Quant report replication skill that turns papers or reports into Chinese
+    translations, factor formulas, validation reports, and strategy assets.
+  license: GPL-3.0
 ---
 
 # Report Replication BACKTEST
