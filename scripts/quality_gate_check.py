@@ -320,12 +320,12 @@ class QualityGateChecker:
 
         # 强制图表
         required_charts = {
-            "01_ie_distribution.png": "因子横截面分布",
-            "02_ic_series.png": "月度 IC 序列",
-            "03_is_oos_ic_comparison.png": "IS vs OOS IC 对比",
-            "04_cumulative_nav_equal_weight.png": "等权重累计净值",
-            "05_cumulative_nav_strategy_direction.png": "策略等手数累计净值",
-            "06_drawdown.png": "回撤图",
+            "01_ie_distribution.png": "factor distribution",
+            "02_ic_series.png": "IC time series",
+            "03_is_oos_ic_comparison.png": "IS vs OOS IC comparison",
+            "04_cumulative_nav_equal_weight.png": "equal-weight validation NAV",
+            "05_cumulative_nav_strategy_direction.png": "strategy-direction validation NAV",
+            "06_drawdown.png": "drawdown",
         }
 
         for filename, desc in required_charts.items():
@@ -338,13 +338,13 @@ class QualityGateChecker:
 
         # 可选图表
         optional_charts = {
-            "07_ic_distribution.png": "IC 分布",
-            "08_rolling_ic.png": "滚动 IC",
-            "09_quantile_nav.png": "分组净值",
-            "10_quantile_return_bar.png": "分组收益单调性",
-            "15_benchmark_nav_comparison.png": "基准净值对比",
-            "16_backtest_alignment_nav.png": "BACKTEST 对齐",
-            "18_cost_sensitivity.png": "成本敏感性",
+            "07_ic_distribution.png": "IC distribution",
+            "08_rolling_ic.png": "rolling IC",
+            "09_quantile_nav.png": "quantile NAV",
+            "10_quantile_return_bar.png": "quantile return monotonicity",
+            "15_benchmark_nav_comparison.png": "benchmark NAV comparison",
+            "16_backtest_alignment_nav.png": "BACKTEST alignment",
+            "18_cost_sensitivity.png": "cost sensitivity",
             "19_walkforward.png": "Walk-forward",
         }
 
