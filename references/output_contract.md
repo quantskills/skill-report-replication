@@ -71,6 +71,13 @@ Use this contract for every report replication project.
 - If BACKTEST or another tool emits English/garbled HTML, preserve it as `backtest_report_raw.html` and create `backtest_report.html` as a Chinese reader-facing explanation page that links to the raw artifact.
 - Beginner-facing explanations must be written for smart non-quant readers. Avoid rigid template prose, unexplained jargon, marketing claims, and exaggerated certainty.
 
+## Chart Image Text Requirements
+
+- Chart image files under `03_factor_validation/charts/` must render English ASCII text only. This includes image titles, subtitles, axis labels, legends, colorbar labels, annotations, heatmap labels, in-image table headers, and watermark text.
+- Chinese chart explanations belong in the surrounding HTML/Markdown text, not inside the image pixels.
+- For Matplotlib/Seaborn/Plotly static images, use broadly available Latin fonts such as `DejaVu Sans` or `Arial`; do not configure CJK chart fonts such as `SimHei`, `SimSun`, `Microsoft YaHei`, `Noto Sans CJK`, or `Source Han Sans`.
+- If a source factor name or report label is Chinese, draw an ASCII-safe display label in the chart and preserve the original Chinese name in the HTML caption or explanation.
+
 ## `manifest.json`
 
 Include:
@@ -136,6 +143,7 @@ Acceptance criteria:
 - Standalone HTML that opens without a server.
 - Include written methodology, charts, tables, and final conclusion.
 - The report body must be Chinese. Metric abbreviations and short English labels are allowed only as glossary aids.
+- All text inside embedded chart images must be English ASCII only; Chinese explanations must appear below or near the chart in HTML.
 - Include a reader-facing `How To Read This Report` / `阅读指南` section near the top. It must explain the evidence chain in plain language: factor definition -> bias audit -> IC / Rank IC -> portfolio test -> OOS result -> BACKTEST result alignment.
 - Include a metric dictionary / glossary that explains, at minimum: IE, IC, Rank IC, ICIR, Positive IC Ratio, Annual Return, Annual Volatility, Sharpe, Calmar, Max DD, Win Rate, NAV, IS, and OOS.
 - State the data source path/mode used for validation.
@@ -211,6 +219,8 @@ If a section cannot be generated because of insufficient data, keep the section 
 ### Required Charts
 
 `03_factor_validation/charts/` must include:
+
+Image text rule: every chart title, axis label, legend, annotation, colorbar label, and in-chart table label must be English ASCII. Use the English content labels below directly when possible.
 
 | File | Content | Required |
 | --- | --- | --- |
