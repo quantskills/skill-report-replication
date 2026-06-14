@@ -16,20 +16,20 @@ from typing import Any
 
 
 REQUIRED_CHARTS = [
-    ("03_factor_validation/charts/01_ie_distribution.png", "因子横截面分布", "data/ie_factor_matrix.csv"),
-    ("03_factor_validation/charts/02_ic_series.png", "月度 IC 序列", "data/ic_series.csv"),
-    ("03_factor_validation/charts/03_is_oos_ic_comparison.png", "IS vs OOS IC 对比", "data/ic_series.csv"),
+    ("03_factor_validation/charts/01_ie_distribution.png", "Factor Distribution", "data/ie_factor_matrix.csv"),
+    ("03_factor_validation/charts/02_ic_series.png", "IC Time Series", "data/ic_series.csv"),
+    ("03_factor_validation/charts/03_is_oos_ic_comparison.png", "IS vs OOS IC Comparison", "data/ic_series.csv"),
     (
         "03_factor_validation/charts/04_cumulative_nav_equal_weight.png",
-        "等权重累计净值",
+        "Equal-Weight Validation NAV",
         "data/portfolio_returns_ew_full.csv",
     ),
     (
         "03_factor_validation/charts/05_cumulative_nav_strategy_direction.png",
-        "策略等手数累计净值",
+        "Strategy-Direction Validation NAV",
         "data/portfolio_returns_dir_full.csv",
     ),
-    ("03_factor_validation/charts/06_drawdown.png", "回撤图", "data/portfolio_returns_dir_full.csv"),
+    ("03_factor_validation/charts/06_drawdown.png", "Drawdown", "data/portfolio_returns_dir_full.csv"),
 ]
 
 CHART_EXPLANATIONS = {
