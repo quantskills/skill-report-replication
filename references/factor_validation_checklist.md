@@ -57,6 +57,8 @@ After the BACKTEST run:
 
 ## Required Chart Pack
 
+All text rendered inside chart image files must be English ASCII only. Use the `Content` labels below for chart titles, axis labels, legends, annotations, and colorbar labels where they fit. Keep Chinese reader explanations in the HTML/Markdown text around each chart, not inside the PNG/SVG pixels.
+
 | # | File | Content | Required |
 | --- | --- | --- | --- |
 | 1 | `01_ie_distribution.png` | factor distribution | yes |

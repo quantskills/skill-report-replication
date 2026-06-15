@@ -107,6 +107,8 @@ The factor validation report should include:
 | 🔍 Factor audit | Data availability, signal lag, label construction, execution price, look-ahead checks, price-leakage checks, sample split, cost assumptions |
 | 🧮 Alignment audit | Theoretical factor-validation curve vs the actual BACKTEST equity curve |
 
+Chart image text must be English ASCII only; Chinese explanations should stay in the HTML text around each chart.
+
 ## 🧰 Helper Scripts
 
 | Script | Purpose |
