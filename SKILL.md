@@ -9,6 +9,8 @@ metadata:
   repository_url: https://github.com/quantskills/skill-report-replication
   project_type: skill
   collection: report-replication
+  creator: abgyjaguo
+  maintainer: abgyjaguo
 ---
 
 # Report Replication BACKTEST
