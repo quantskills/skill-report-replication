@@ -13,6 +13,7 @@
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-blue">
 </p>
 
+
 ---
 
 ## 📖 Skill 定位
@@ -147,3 +148,11 @@ references/data_sources.md                  # 数据源约定
 ## 📜 许可证
 
 本项目使用 GNU General Public License v3.0。详见 [LICENSE](LICENSE)。
+
+## 🐼 PandaAI / QUANTSKILLS 社群
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/quantskills/.github/main/profile/assets/pandaai-community-qr.jpg" alt="PandaAI 社群二维码" width="220">
+  <br>
+  <sub>扫码加入 PandaAI 社群，交流 QUANTSKILLS 技能、Agent 工作流与量化研究实践。</sub>
+</div>
