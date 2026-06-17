@@ -9,7 +9,7 @@
   <img alt="metrics" src="https://img.shields.io/badge/metrics-IC%20%C2%B7%20RankIC%20%C2%B7%20ICIR%20%C2%B7%20Sharpe%20%C2%B7%20Calmar-blue">
   <img alt="backtest" src="https://img.shields.io/badge/backtest-bundled_local_engine-orange">
   <img alt="quality gate" src="https://img.shields.io/badge/quality_gate-quality__gate__check.py-red">
-  <img alt="data" src="https://img.shields.io/badge/data-%E7%9C%9F%E5%AE%9E%E5%8F%AF%E8%BF%BD%E6%BA%AF-9cf">
+  <img alt="data" src="https://img.shields.io/badge/data-Pandadata-9cf">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-blue">
 </p>
 
@@ -57,7 +57,11 @@ flowchart LR
 
 ## 🗃️ 数据源原则
 
-数据必须是**真实、可追溯**的数据。优先使用研报所需数据、用户提供数据、BACKTEST 配置所绑定的数据源，或当前项目明确记录的数据源。
+默认生产数据源是 **Pandadata / `panda_data` SDK**。因子验证和 BACKTEST 需要日线市场数据时，先用 `scripts/pandadata_market_data.py` 拉取真实行情，并把缓存文件与 metadata 写入 `03_factor_validation/data_cache/`。
+
+凭证只从当前环境变量或 `~/.pandadata/pandadata.env` 读取：`DEFAULT_USERNAME`、`DEFAULT_PASSWORD`、`JAVA_SERVICE_BASE_URL`。仓库、报告、manifest、日志中都不应写入账号、密码或 token。
+
+如果 Pandadata 不覆盖研报所需数据，才使用用户提供文件或其他来源，并在 `manifest.json`、HTML 报告和交付摘要中说明原因。
 
 > 🚫 禁止用合成数据、模拟行情、随机市场数据证明因子有效性。固定随机种子随机因子只能作为负控制基准，且必须建立在同一份真实收益数据上。
 
@@ -75,6 +79,9 @@ flowchart LR
     data/
       benchmark_comparison.csv
       backtest_alignment_audit.csv
+    data_cache/
+      pandadata_market_data.csv
+      pandadata_market_data.csv.metadata.json
     charts/
   04_backtest_strategy/
     strategy.py                         # BACKTEST 策略
@@ -116,12 +123,29 @@ flowchart LR
 |---|---|
 | `scripts/check_dependencies.py --install` | 检查并自动安装 Python 依赖（也可 `pip install -r requirements.txt`） |
 | `scripts/create_project.py` | 创建标准输出目录和 `manifest.json` |
-| `scripts/local_backtest.py {report_dir} --market-data xxx.csv` | 内置本地回测引擎；行情支持 CSV/Parquet，默认需要 `date`、`symbol`、`close` 列 |
+| `scripts/pandadata_market_data.py` | 从 Pandadata 拉取真实日线行情，输出回测可读 CSV/Parquet 和 metadata |
+| `scripts/local_backtest.py {report_dir} --market-data xxx.csv` | 内置本地回测引擎；默认读取 Pandadata 缓存，行情支持 CSV/Parquet，默认需要 `date`、`symbol`、`close` 列 |
 | `scripts/check_step5_strategy.py` | 检查策略、配置、回测报告、信号日志、权益曲线、绩效与交易记录 |
 | `scripts/build_factor_report.py` | 根据结构化 JSON 指标生成 HTML 因子检验报告骨架 |
 | `scripts/quality_gate_check.py` | 交付前质量门禁：RAG scorecard、基准对照、对齐审计、每图解释、日志完整性、占位内容清理 |
 
 回测引擎默认读取信号日志：`04_backtest_strategy/backtest_logs/signal_log.jsonl`。
+
+### Pandadata 生产拉数示例
+
+```bash
+python scripts/pandadata_market_data.py \
+  --asset-type stock \
+  --symbols 000001.SZ 600000.SH \
+  --start-date 20250101 \
+  --end-date 20250131 \
+  --output /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv \
+  --project-dir /home/coder/project/replication/report-replication/{report_id}
+
+python scripts/local_backtest.py \
+  /home/coder/project/replication/report-replication/{report_id} \
+  --market-data /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv
+```
 
 ## 📚 关键参考文件
 
@@ -138,7 +162,7 @@ references/data_sources.md                  # 数据源约定
 每次研报复现都应检查：
 
 1. 是否生成完整产出结构。
-2. 是否使用真实、可追溯的数据。
+2. 是否使用 Pandadata 真实、可追溯的数据，或明确记录 Pandadata 不适用的原因。
 3. 是否完成因子审计和稳健性检验。
 4. 是否生成 BACKTEST 策略。
 5. 是否实际运行内置 BACKTEST 或用户提供的外部 BACKTEST，或明确记录阻塞原因。

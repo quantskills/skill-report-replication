@@ -9,7 +9,7 @@
   <img alt="metrics" src="https://img.shields.io/badge/metrics-IC%20%C2%B7%20RankIC%20%C2%B7%20ICIR%20%C2%B7%20Sharpe%20%C2%B7%20Calmar-blue">
   <img alt="backtest" src="https://img.shields.io/badge/backtest-bundled_local_engine-orange">
   <img alt="quality gate" src="https://img.shields.io/badge/quality_gate-quality__gate__check.py-red">
-  <img alt="data" src="https://img.shields.io/badge/data-real_%26_traceable-9cf">
+  <img alt="data" src="https://img.shields.io/badge/data-Pandadata-9cf">
   <img alt="license" src="https://img.shields.io/badge/license-GPLv3-blue">
 </p>
 
@@ -56,7 +56,11 @@ This skill should **not call other research or data skills** during these stages
 
 ## 🗃️ Data Rules
 
-Data must be **real and traceable**. Prefer data required by the source report, user-provided data, data bound to the BACKTEST configuration, or data sources explicitly recorded in the current project.
+The default production data source is **Pandadata / the `panda_data` SDK**. When factor validation or BACKTEST needs daily market data, first run `scripts/pandadata_market_data.py` and save the cache plus metadata under `03_factor_validation/data_cache/`.
+
+Credentials are loaded only from the current environment or `~/.pandadata/pandadata.env`: `DEFAULT_USERNAME`, `DEFAULT_PASSWORD`, and `JAVA_SERVICE_BASE_URL`. Do not write usernames, passwords, or tokens into the repository, reports, manifest, or logs.
+
+Use user-provided files or other sources only when Pandadata does not cover the required dataset, and record the reason in `manifest.json`, the HTML report, and the delivery summary.
 
 > 🚫 Do not use synthetic data, simulated market data, or random market data to prove factor effectiveness. Random factors with a fixed seed may only be used as negative controls against the same real return data.
 
@@ -74,6 +78,9 @@ Data must be **real and traceable**. Prefer data required by the source report, 
     data/
       benchmark_comparison.csv
       backtest_alignment_audit.csv
+    data_cache/
+      pandadata_market_data.csv
+      pandadata_market_data.csv.metadata.json
     charts/
   04_backtest_strategy/
     strategy.py                         # BACKTEST strategy
@@ -115,12 +122,29 @@ Chart image text must be English ASCII only; Chinese explanations should stay in
 |---|---|
 | `scripts/check_dependencies.py --install` | Check and auto-install Python dependencies (or `pip install -r requirements.txt`) |
 | `scripts/create_project.py` | Create the standard output directory and `manifest.json` |
-| `scripts/local_backtest.py {report_dir} --market-data xxx.csv` | Bundled local backtest engine; market data may be CSV/Parquet with `date`, `symbol`, `close` columns by default |
+| `scripts/pandadata_market_data.py` | Download real Pandadata daily bars and write a backtest-ready CSV/Parquet plus metadata |
+| `scripts/local_backtest.py {report_dir} --market-data xxx.csv` | Bundled local backtest engine; defaults to the Pandadata cache and expects `date`, `symbol`, `close` columns |
 | `scripts/check_step5_strategy.py` | Check strategy, config, backtest report, signal log, equity curve, performance, and trades |
 | `scripts/build_factor_report.py` | Build a standalone HTML factor-validation report skeleton from structured JSON metrics |
 | `scripts/quality_gate_check.py` | Pre-delivery quality gate: RAG scorecard, benchmark comparison, alignment audit, per-chart explanations, log completeness, placeholder cleanup |
 
 The backtest engine reads the signal log from `04_backtest_strategy/backtest_logs/signal_log.jsonl` by default.
+
+### Pandadata Production Fetch Example
+
+```bash
+python scripts/pandadata_market_data.py \
+  --asset-type stock \
+  --symbols 000001.SZ 600000.SH \
+  --start-date 20250101 \
+  --end-date 20250131 \
+  --output /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv \
+  --project-dir /home/coder/project/replication/report-replication/{report_id}
+
+python scripts/local_backtest.py \
+  /home/coder/project/replication/report-replication/{report_id} \
+  --market-data /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv
+```
 
 ## 📚 Key References
 
@@ -137,7 +161,7 @@ references/data_sources.md                  # data source conventions
 Each report replication should verify:
 
 1. The complete output structure was generated.
-2. Real, traceable data was used.
+2. Real, traceable Pandadata data was used, or the reason Pandadata was insufficient was recorded.
 3. Factor audit and robustness checks were completed.
 4. BACKTEST strategy code was generated.
 5. The bundled BACKTEST or a user-provided external BACKTEST actually ran, or a blocking reason was recorded.

@@ -24,6 +24,7 @@ quantSkills:
   - report-replication
   - factor-research
   - backtest
+  - pandadata
   - html-report
   - chinese
   platforms:
@@ -35,10 +36,11 @@ quantSkills:
   status: stable
   validation_level: runnable
   maintainer_type: official
-  summary_zh: 把一篇量化研报、论文、PDF、网页或文本材料，转化为完整的研究复现交付包：全文翻译 → 因子公式复现 → 有效性验证 → 策略代码 →
-    真实本地回测 → 交付摘要。
+  summary_zh: 把一篇量化研报、论文、PDF、网页或文本材料，转化为 Pandadata 真实数据驱动的研究复现交付包：全文翻译 → 因子公式复现
+    → 有效性验证 → 策略代码 → 真实本地回测 → 交付摘要。
   summary_en: Quant report replication skill that turns papers or reports into Chinese
-    translations, factor formulas, validation reports, and strategy assets.
+    translations, factor formulas, Pandadata-backed validation reports, and strategy
+    assets.
   license: GPL-3.0
 ---
 
@@ -55,6 +57,10 @@ Turn a quant report, paper, PDF, webpage, or text source into a complete researc
 5. Chinese final delivery summary.
 
 This skill is self-contained for translation, factor reconstruction, factor validation, bundled local BACKTEST execution, optional external BACKTEST execution, and final delivery. Do not call any legacy framework-specific skills, scripts, data layers, examples, or assumptions.
+
+Pandadata is the default production market-data source. Use `scripts/pandadata_market_data.py` to download daily stock, index, futures, Hong Kong, or US market data into `03_factor_validation/data_cache/` before factor validation or BACKTEST. User-provided or report-supplied files may be used only when Pandadata does not cover the required dataset, and the fallback must be documented in `manifest.json`, the validation report, and the final summary.
+
+Credentials must come from `DEFAULT_USERNAME`, `DEFAULT_PASSWORD`, `JAVA_SERVICE_BASE_URL`, or `~/.pandadata/pandadata.env`. Never write usernames, passwords, tokens, or raw credential files into generated artifacts, logs, commits, or reports. Record only that credential values were not persisted.
 
 ## Language And Readability Rules
 
@@ -121,6 +127,8 @@ Create one project directory per report:
   03_factor_validation/charts/18_cost_sensitivity.png
   03_factor_validation/charts/19_walkforward.png
   03_factor_validation/data_cache/
+  03_factor_validation/data_cache/pandadata_market_data.csv
+  03_factor_validation/data_cache/pandadata_market_data.csv.metadata.json
   04_backtest_strategy/strategy.py
   04_backtest_strategy/config.json
   04_backtest_strategy/backtest_report.html
@@ -169,15 +177,29 @@ Before creating or running the project, verify the local runtime dependencies:
 python scripts/check_dependencies.py --install
 ```
 
-Use the bundled local BACKTEST engine by default:
+Use Python 3.10 or newer for Pandadata. The default `panda_data==0.0.9` runtime reads local credentials from the current environment or `~/.pandadata/pandadata.env`; it also requires `requests` at runtime.
+
+Use `scripts/create_project.py` to create the output structure and `manifest.json`. The default root is `/home/coder/project/replication/report-replication`.
+
+Download real Pandadata market data before validation and BACKTEST:
 
 ```bash
-python scripts/local_backtest.py /home/coder/project/replication/report-replication/{report_id} --market-data /path/to/market_data.csv
+python scripts/pandadata_market_data.py \
+  --asset-type stock \
+  --symbols 000001.SZ 600000.SH \
+  --start-date 20250101 \
+  --end-date 20250131 \
+  --output /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv \
+  --project-dir /home/coder/project/replication/report-replication/{report_id}
+```
+
+Then use the bundled local BACKTEST engine by default:
+
+```bash
+python scripts/local_backtest.py /home/coder/project/replication/report-replication/{report_id} --market-data /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv
 ```
 
 The bundled engine reads real market data plus `04_backtest_strategy/backtest_logs/signal_log.jsonl`, applies a configurable execution lag, estimates fees/slippage, and writes equity, trade, metric, alignment, raw, and Chinese HTML report artifacts. If the user explicitly supplies an external BACKTEST runner, use it only after documenting the entrypoint, command, config, and output mapping in `manifest.json`.
-
-Use `scripts/create_project.py` to create the output structure and `manifest.json`. The default root is `/home/coder/project/replication/report-replication`.
 
 Record:
 
@@ -186,7 +208,7 @@ Record:
 - Run date.
 - Python executable and dependency report.
 - BACKTEST engine entrypoint, version if known, command, config, and output files. For the bundled engine, record `scripts/local_backtest.py`.
-- Data sources, assumptions, parameters, code hashes, and run history.
+- Pandadata method, symbols/universe, sample period, frequency, adjustment rule, local cache path, metadata path, missing-value handling, assumptions, parameters, code hashes, and run history.
 
 ### 2. Extract And Translate
 
@@ -228,7 +250,7 @@ Do not move to factor validation until the gate passes or the blocker is documen
 
 ### 4. Validate Factor Effectiveness
 
-Use real, traceable market or research data. Prefer the dataset required by the report and the BACKTEST configuration. Do not use synthetic, mock, or randomly generated market data to prove effectiveness. A fixed-seed random factor may only be used as a negative-control baseline on the same real return data as the target factor.
+Use real, traceable market or research data. Default to Pandadata daily data downloaded with `scripts/pandadata_market_data.py` when validating market-price factors or running BACKTEST. Prefer the Pandadata dataset that matches the report universe and BACKTEST configuration. Do not use synthetic, mock, or randomly generated market data to prove effectiveness. A fixed-seed random factor may only be used as a negative-control baseline on the same real return data as the target factor.
 
 Validation is two-phase:
 
@@ -333,7 +355,8 @@ Before final delivery, verify:
 - The translation is complete enough to preserve the report structure.
 - Every reconstructed formula has variables and assumptions.
 - `02_factor_reproduction/reference_implementation.py` exists and contains function-level reference code.
-- Data preparation records data source, cache/database/file path, symbols, period, adjustment type, and data availability assumptions.
+- Data preparation records Pandadata provider/method, cache path, metadata path, symbols, period, adjustment type, frequency, missing-value handling, and data availability assumptions. If a non-Pandadata source is used, the report must explain why Pandadata was insufficient.
+- No credential values are written into `manifest.json`, HTML/Markdown reports, logs, CSVs, or committed files.
 - Factor validation uses real traceable data; no synthetic, mock, or random market data is used to prove effectiveness.
 - If validation data is insufficient, the conclusion is inconclusive.
 - Factor validation includes audit controls, IS/OOS or documented blocker, parameter stability, cost sensitivity or documented blocker, and baseline comparisons.

@@ -47,6 +47,8 @@ ARTIFACTS = {
     "chart_backtest_alignment": "03_factor_validation/charts/16_backtest_alignment_nav.png",
     "chart_walkforward": "03_factor_validation/charts/19_walkforward.png",
     "chart_cost_sensitivity": "03_factor_validation/charts/18_cost_sensitivity.png",
+    "pandadata_market_data": "03_factor_validation/data_cache/pandadata_market_data.csv",
+    "pandadata_market_data_metadata": "03_factor_validation/data_cache/pandadata_market_data.csv.metadata.json",
     "backtest_strategy": "04_backtest_strategy/strategy.py",
     "backtest_config": "04_backtest_strategy/config.json",
     "backtest_report": "04_backtest_strategy/backtest_report.html",
