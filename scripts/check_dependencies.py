@@ -22,8 +22,8 @@ class Dependency:
 
 
 DEPENDENCIES = [
-    Dependency("pandas", "pandas", install_specs=("pandas",)),
-    Dependency("numpy", "numpy", install_specs=("numpy",)),
+    Dependency("pandas", "pandas", min_version="2.0.0", install_specs=("pandas>=2.0.0",)),
+    Dependency("numpy", "numpy", min_version="1.22.0", install_specs=("numpy>=1.22,<2.0",)),
     Dependency("matplotlib", "matplotlib", install_specs=("matplotlib",)),
     Dependency("scipy", "scipy", install_specs=("scipy",)),
     Dependency("statsmodels", "statsmodels", install_specs=("statsmodels",)),
@@ -31,6 +31,8 @@ DEPENDENCIES = [
     Dependency("pdfplumber", "pdfplumber", install_specs=("pdfplumber",)),
     Dependency("openpyxl", "openpyxl", install_specs=("openpyxl",)),
     Dependency("pyarrow", "pyarrow", install_specs=("pyarrow",)),
+    Dependency("requests", "requests", install_specs=("requests",)),
+    Dependency("panda_data", "panda_data", min_version="0.0.9", install_specs=("panda_data==0.0.9",)),
 ]
 
 
@@ -131,10 +133,17 @@ def main() -> int:
     report = {
         "python_executable": sys.executable,
         "python_version": sys.version,
+        "python_min_version": "3.10",
+        "python_ok": sys.version_info >= (3, 10),
         "dependencies": [],
         "install_attempts": {},
         "ok": False,
     }
+
+    if not report["python_ok"]:
+        report["error"] = "Pandadata production mode requires Python 3.10 or newer."
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 1
 
     for dep in DEPENDENCIES:
         info = inspect_dependency(dep)

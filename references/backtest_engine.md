@@ -7,16 +7,30 @@ Use the bundled local BACKTEST engine as the default strategy execution and back
 Default entrypoint:
 
 ```bash
-python scripts/local_backtest.py /home/coder/project/replication/report-replication/{report_id} --market-data /path/to/market_data.csv
+python scripts/local_backtest.py /home/coder/project/replication/report-replication/{report_id} --market-data /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv
 ```
 
-Market data supports CSV or Parquet. By default it expects:
+Download the default market-data file from Pandadata first:
+
+```bash
+python scripts/pandadata_market_data.py \
+  --asset-type stock \
+  --symbols 000001.SZ 600000.SH \
+  --start-date 20250101 \
+  --end-date 20250131 \
+  --output /home/coder/project/replication/report-replication/{report_id}/03_factor_validation/data_cache/pandadata_market_data.csv \
+  --project-dir /home/coder/project/replication/report-replication/{report_id}
+```
+
+Market data supports CSV or Parquet. The Pandadata downloader normalizes the required columns:
 
 - `date`
 - `symbol`
 - `close`
 
 Use `--date-col`, `--symbol-col`, and `--price-col` when the input uses different names.
+
+If an external or user-provided market-data file replaces Pandadata, document why Pandadata was insufficient and record the source in `manifest.json`.
 
 The engine reads signals from:
 

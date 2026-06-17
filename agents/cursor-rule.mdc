@@ -17,6 +17,7 @@ Workflow:
 
 1. Read `.cursor/skills/report-replication/SKILL.md`.
 2. Load referenced files under `references/` only when the skill asks for them or the task needs those details.
-3. Run bundled scripts from the skill root or from the selected sub-skill directory when `SKILL.md` instructs it.
-4. Preserve documented API names, parameters, file paths, formulas, validation limits, and freshness notes.
-5. Do not invent data interfaces, credentials, factor definitions, or runtime behavior that is not supported by the skill files.
+3. Use `scripts/pandadata_market_data.py` as the default production market-data downloader when daily bars are needed.
+4. Run bundled scripts from the skill root or from the selected sub-skill directory when `SKILL.md` instructs it.
+5. Preserve documented API names, parameters, file paths, formulas, validation limits, and freshness notes.
+6. Do not invent data interfaces, credentials, factor definitions, or runtime behavior that is not supported by the skill files.

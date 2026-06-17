@@ -50,6 +50,8 @@ Use this contract for every report replication project.
   03_factor_validation/charts/18_cost_sensitivity.png
   03_factor_validation/charts/19_walkforward.png
   03_factor_validation/data_cache/
+  03_factor_validation/data_cache/pandadata_market_data.csv
+  03_factor_validation/data_cache/pandadata_market_data.csv.metadata.json
   04_backtest_strategy/strategy.py
   04_backtest_strategy/config.json
   04_backtest_strategy/backtest_report.html
@@ -147,6 +149,7 @@ Acceptance criteria:
 - Include a reader-facing `How To Read This Report` / `阅读指南` section near the top. It must explain the evidence chain in plain language: factor definition -> bias audit -> IC / Rank IC -> portfolio test -> OOS result -> BACKTEST result alignment.
 - Include a metric dictionary / glossary that explains, at minimum: IE, IC, Rank IC, ICIR, Positive IC Ratio, Annual Return, Annual Volatility, Sharpe, Calmar, Max DD, Win Rate, NAV, IS, and OOS.
 - State the data source path/mode used for validation.
+- State the Pandadata method and cache file used for validation, or explain why a non-Pandadata source was required.
 - Data must be real and traceable. Synthetic, mock, or randomly generated market data is strictly prohibited for factor validation. If data is insufficient, state this explicitly and label the conclusion as `inconclusive`.
 - A fixed-seed random-factor baseline is allowed only as a negative-control signal on the same real return data used by the factor. It must never replace real market data.
 - Include data diagnostics, IC tests, Rank IC tests, IC distribution, rolling IC, quantile returns, quantile monotonicity, long-short performance, drawdown, yearly/monthly performance, turnover, benchmark comparison, and BACKTEST alignment when data allows.
@@ -216,6 +219,15 @@ If a section cannot be generated because of insufficient data, keep the section 
 | `benchmark_comparison.csv` | factor and baseline returns or metrics | yes |
 | `backtest_alignment_audit.csv` | factor-validation vs BACKTEST actual equity audit | yes |
 
+### Required Data Cache Files
+
+`03_factor_validation/data_cache/` should include the Pandadata cache used for validation and BACKTEST:
+
+| File | Content | Required |
+| --- | --- | --- |
+| `pandadata_market_data.csv` | normalized Pandadata market data with `date`, `symbol`, and `close` | yes when market-price data is required |
+| `pandadata_market_data.csv.metadata.json` | provider, SDK method, symbols, sample period, adjustment, output path, fetch timestamp, and missing-value handling | yes when Pandadata is used |
+
 ### Required Charts
 
 `03_factor_validation/charts/` must include:
@@ -261,6 +273,7 @@ Acceptance criteria:
 - Parameters are editable in one visible section.
 - Strategy logic follows the reconstructed factor and validation results.
 - BACKTEST is run locally with `scripts/local_backtest.py` by default.
+- Default market data comes from `03_factor_validation/data_cache/pandadata_market_data.csv`, produced by `scripts/pandadata_market_data.py`.
 - `backtest_report.html` must be Chinese-readable; if the engine generated an English/garbled raw report, save it separately as `backtest_report_raw.html` and make `backtest_report.html` a Chinese explanation/wrapper with references to raw engine evidence.
 - Strategy backtest must output `backtest_logs/signal_log.jsonl`, one JSON record per line: `{"date": "YYYY-MM-DD", "signals": {"SYM": {"factor": float, "direction": 1|-1|0}}}`.
 - Bundled engine outputs must include `equity_curve.csv`, `performance_metrics.csv`, `trades.csv`, and `position_return_detail.csv`.
