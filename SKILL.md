@@ -44,6 +44,25 @@ quantSkills:
   license: GPL-3.0
 ---
 
+```json qsh-form
+{
+  "version": 1,
+  "task": {
+    "placeholder": "请提供量化研报、论文、PDF、网页或文本，并说明期望复现范围",
+    "required": true
+  },
+  "fields": [
+    {
+      "key": "focus",
+      "label": "复现重点",
+      "type": "text",
+      "placeholder": "如：全文翻译、某个因子、有效性验证或回测策略"
+    }
+  ],
+  "prompt_template": "{{#task}}任务与材料：\n{{task}}\n\n{{/task}}{{#attachments}}用户上传的材料（已放入工作区）：\n{{attachments}}\n\n{{/attachments}}请端到端复现所给量化报告或论文{{#focus}}，重点关注 {{focus}}{{/focus}}：完成中文全文翻译、研究摘要与因子公式重构、真实可溯源数据验证、无前视偏差的 BACKTEST 策略及本地回测、中文可读报告和最终交付摘要；无法执行的环节须如实记录，输出中文报告。"
+}
+```
+
 # Report Replication BACKTEST
 
 ## Purpose
