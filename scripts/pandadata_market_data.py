@@ -87,7 +87,7 @@ def credentials_from_env() -> tuple[str, str, str]:
 
 def init_pandadata(env_file: Path):
     if sys.version_info < (3, 10):
-        raise PandadataDownloadError("panda_data==0.0.9 requires Python 3.10 or newer.")
+        raise PandadataDownloadError("panda_data==1.0.6 requires Python 3.10 or newer.")
 
     try:
         import panda_data  # noqa: PLC0415

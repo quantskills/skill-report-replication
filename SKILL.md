@@ -41,7 +41,7 @@ quantSkills:
   summary_en: Quant report replication skill that turns papers or reports into Chinese
     translations, factor formulas, Pandadata-backed validation reports, and strategy
     assets.
-  license: GPL-3.0
+  license: GPL-3.0-only
 ---
 
 ```json qsh-form
@@ -196,7 +196,7 @@ Before creating or running the project, verify the local runtime dependencies:
 python scripts/check_dependencies.py --install
 ```
 
-Use Python 3.10 or newer for Pandadata. The default `panda_data==0.0.9` runtime reads local credentials from the current environment or `~/.pandadata/pandadata.env`; it also requires `requests` at runtime.
+Use Python 3.10 or newer for Pandadata. The default `panda_data==1.0.6` runtime reads local credentials from the current environment or `~/.pandadata/pandadata.env`; it also requires `requests` at runtime.
 
 Use `scripts/create_project.py` to create the output structure and `manifest.json`. The default root is `/home/coder/project/replication/report-replication`.
 
@@ -393,3 +393,7 @@ Before final delivery, verify:
 - `references/backtest_engine.md`: BACKTEST strategy generation and execution rules.
 - `references/data_sources.md`: data source and provenance rules.
 - `references/replication_lessons_learned.md`: historical failure cases and guardrails.
+
+## Pandadata compatibility
+
+[Pandadata 1.0.6 compatibility](references/pandadata-compatibility.md) — exact SDK baseline, validation scope, and shared guidance for all supported agent runtimes.
