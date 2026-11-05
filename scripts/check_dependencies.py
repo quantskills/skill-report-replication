@@ -32,7 +32,7 @@ DEPENDENCIES = [
     Dependency("openpyxl", "openpyxl", install_specs=("openpyxl",)),
     Dependency("pyarrow", "pyarrow", install_specs=("pyarrow",)),
     Dependency("requests", "requests", install_specs=("requests",)),
-    Dependency("panda_data", "panda_data", min_version="0.0.9", install_specs=("panda_data==0.0.9",)),
+    Dependency("panda_data", "panda_data", min_version="0.0.9", install_specs=("panda_data==1.0.6",)),
 ]
 
 
